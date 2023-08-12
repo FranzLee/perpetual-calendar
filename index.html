@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hant-TW" lang="zh-Hant-TW">
+<head>
+    <style>
+        .styledButton {
+            border: 0;
+            line-height: 2.5;
+            padding: 0 20px;
+            font-size: 1rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 1px #000;
+            border-radius: 10px;
+            background-color: rgba(220, 0, 0, 1);
+            background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+            box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .styledButton:hover {
+            background-color: rgba(255, 0, 0, 1);
+        }
+
+        .styledButton:active {
+            box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .styleTopic {
+            color: rgba(153,153,255,1);
+            font-size: xx-large;
+            font-weight: bold;
+        }
+
+        .styleText {
+            color: rgba(153, 153, 255, 1);
+            font-size: medium;
+        }
+    </style>
+    <script type="text/javascript">
+        var year = -1;
+        var month = -1;
+        var day = -1;
+        var answer = -1;
+        var leapYear = 0;
+
+        function inquire() {
+            year = -1;
+            month = -1;
+            day = -1;
+
+            year = Number(document.getElementById("inputYear").value);
+            month = Number(document.getElementById("inputMonth").value);
+            day = Number(document.getElementById("inputDay").value);
+            
+            // Validation
+            if ((year <= 1582) || !Number.isInteger(year)) {
+                document.getElementById("result").innerHTML = '輸入年份錯誤'
+            }
+            else if (!Number.isInteger(month) || (month < 1) || (month > 12)) {
+                document.getElementById("result").innerHTML = '輸入月份錯誤'
+            }
+            else {
+                if (!Number.isInteger(day) || (day > dayOfMonth[month]) || (day < 1)) {
+                    document.getElementById("result").innerHTML = '輸入日期錯誤'
+                }
+                else if (!isLeapYear(year) && month == 2 && day > 28){
+                    document.getElementById("result").innerHTML = '輸入日期錯誤'
+                }
+                else {
+                    // User input is valid; begin computation
+                    if (isLeapYear(year) && month >= 3){
+                        leapYear = 1;
+                    }
+                    else {
+                        leapYear = 0;
+                    }
+                    year = year - 1;
+                    answer = (year + Math.floor(year / 4) + Math.floor(year / 400) - Math.floor(year / 100) + passedDay[month] + day + leapYear) % 7;
+                    document.getElementById("result").innerHTML = '您查詢的日期為星期' + numberToChinese[answer]                    
+                }
+            }
+        }
+
+        function isLeapYear(y) {
+            if (y % 400 == 0){
+                return true;
+            }
+            else if (y % 100 == 0){
+                return false;
+            }
+            else if (y % 4 == 0){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        const numberToChinese = {
+            '0' : '日',
+            '1' : '一',
+            '2' : '二',
+            '3' : '三',
+            '4' : '四',
+            '5' : '五',
+            '6' : '六',
+        }
+
+        const passedDay = {
+            '1' : 0,
+            '2' : 31,
+            '3' : 59,
+            '4' : 90,
+            '5' : 120,
+            '6' : 151,
+            '7' : 181,
+            '8' : 212,
+            '9' : 243,
+            '10' : 273,
+            '11' : 304,
+            '12' : 334,
+        }
+
+        const dayOfMonth = {
+            '1' : 31,
+            '2' : 29,
+            '3' : 31,
+            '4' : 30,
+            '5' : 31,
+            '6' : 30,
+            '7' : 31,
+            '8' : 31,
+            '9' : 30,
+            '10' : 31,
+            '11' : 30,
+            '12' : 31,
+        }
+
+    </script>
+</head>
+<body>
+    <p class="styleTopic">萬年曆</p>
+    <p class="styleText">說明：只要輸入年、月、日，即可求得當天是星期幾喔！</p>
+    <input type="text" id="inputYear" name="year" placeholder="年"></input><br></br>
+    <input type="text" id="inputMonth" name="month" placeholder="月"></input><br></br>
+    <input type="text" id="inputDay" name="day" placeholder="日"></input><br></br>
+    <input class="styledButton" type="button" value="查詢" onclick="inquire()"></input>
+    <hr size="1px" align="center" width="100%">
+    <p class="styleText" id="result"></p>
+</body>
