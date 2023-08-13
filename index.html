@@ -43,15 +43,17 @@
         var leapYear = 0;
 
         function inquire() {
+            //將各變數設為-1來debug
             year = -1;
             month = -1;
-            day = -1;
+            day = -1; 
 
+            //取得輸入
             year = Number(document.getElementById("inputYear").value);
             month = Number(document.getElementById("inputMonth").value);
             day = Number(document.getElementById("inputDay").value);
-            
-            // Validation
+
+            //驗證使用者輸入的是否合理
             if ((year <= 1582) || !Number.isInteger(year)) {
                 document.getElementById("result").innerHTML = '輸入年份錯誤'
             }
@@ -66,20 +68,24 @@
                     document.getElementById("result").innerHTML = '輸入日期錯誤'
                 }
                 else {
-                    // User input is valid; begin computation
+                    // 已完成驗證
+                    // 找出當年是否為閏年
                     if (isLeapYear(year) && month >= 3){
                         leapYear = 1;
                     }
                     else {
                         leapYear = 0;
                     }
+                    // 要減一年才會是經過的年份
                     year = year - 1;
+                    // 開始運算
                     answer = (year + Math.floor(year / 4) + Math.floor(year / 400) - Math.floor(year / 100) + passedDay[month] + day + leapYear) % 7;
                     document.getElementById("result").innerHTML = '您查詢的日期為星期' + numberToChinese[answer]                    
                 }
             }
         }
-
+        
+        //閏年判斷
         function isLeapYear(y) {
             if (y % 400 == 0){
                 return true;
@@ -95,6 +101,7 @@
             }
         }
 
+        //把結果轉為中文
         const numberToChinese = {
             '0' : '日',
             '1' : '一',
@@ -105,6 +112,7 @@
             '6' : '六',
         }
 
+        // 運算各個月份經過的天數
         const passedDay = {
             '1' : 0,
             '2' : 31,
@@ -120,6 +128,7 @@
             '12' : 334,
         }
 
+        // 每個月份的天數
         const dayOfMonth = {
             '1' : 31,
             '2' : 29,
